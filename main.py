@@ -12,6 +12,7 @@ class TMail_Accounts(QMainWindow):
         QWidget.__init__(self, parent)
         self.ui = AccountWindow()
         self.ui.setupUi(self)
+        #JUST FOR LULZ
 
 
 class TMail(QMainWindow):
