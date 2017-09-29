@@ -1,82 +1,57 @@
-# -*- coding: utf-8 -*-
+from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox,QMainWindow
+from PyQt5.QtGui import QBrush, QColor
+from window_accounts import Ui_AccountsWindow
 
-# Form implementation generated from reading ui file 'accountswindow.ui'
-#
-# Created by: PyQt5 UI code generator 5.9
-#
-# WARNING! All changes made in this file will be lost!
+import PyQt5.QtCore as Core
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+class TMail_Accounts(QMainWindow):
 
-class Ui_AccountsWindow(object):
-    def setupUi(self, AccountsWindow):
-        AccountsWindow.setObjectName("AccountsWindow")
-        AccountsWindow.resize(540, 312)
-        AccountsWindow.setMinimumSize(QtCore.QSize(540, 312))
-        AccountsWindow.setMaximumSize(QtCore.QSize(540, 312))
-        self.centralwidget = QtWidgets.QWidget(AccountsWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(5, 40, 530, 221))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.tableWidget.sizePolicy().hasHeightForWidth())
-        self.tableWidget.setSizePolicy(sizePolicy)
-        self.tableWidget.setMinimumSize(QtCore.QSize(530, 221))
-        self.tableWidget.setMaximumSize(QtCore.QSize(541, 221))
-        self.tableWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContentsOnFirstShow)
-        self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
-        self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.tableWidget.setColumnCount(3)
-        self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setRowCount(0)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignCenter)
-        self.tableWidget.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignCenter)
-        self.tableWidget.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignCenter)
-        self.tableWidget.setHorizontalHeaderItem(2, item)
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(443, 10, 91, 21))
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton_save = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_save.setGeometry(QtCore.QRect(350, 10, 91, 21))
-        self.pushButton_save.setObjectName("pushButton_save")
-        AccountsWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(AccountsWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 540, 22))
-        self.menubar.setObjectName("menubar")
-        self.menuMenu = QtWidgets.QMenu(self.menubar)
-        self.menuMenu.setObjectName("menuMenu")
-        AccountsWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(AccountsWindow)
-        self.statusbar.setObjectName("statusbar")
-        AccountsWindow.setStatusBar(self.statusbar)
-        self.actionClose = QtWidgets.QAction(AccountsWindow)
-        self.actionClose.setObjectName("actionClose")
-        self.menuMenu.addAction(self.actionClose)
-        self.menubar.addAction(self.menuMenu.menuAction())
+    def __init__(self, parent=None):
+        super().__init__()
+        self.ui = Ui_AccountsWindow()
+        self.ui.setupUi(self)
+        self.ui.actionClose.triggered.connect(self.close)
+        table = self.ui.tableWidget
+        table.setColumnCount(3)
+        table.setColumnWidth(0,225)
+        table.setColumnWidth(1,225)
+        table.setColumnWidth(2,70)
+        addAccount = self.ui.pushButton
+        addAccount.clicked.connect(self.createRow)
+        table.cellClicked.connect(self.foo)
+        self.ui.pushButton_save.clicked.connect(self.saveAccounts)
 
-        self.retranslateUi(AccountsWindow)
-        QtCore.QMetaObject.connectSlotsByName(AccountsWindow)
+    def foo(self):
+        currentColumn = self.ui.tableWidget.currentColumn()
+        if currentColumn == 2:
+            self.MessageBox()
 
-    def retranslateUi(self, AccountsWindow):
-        _translate = QtCore.QCoreApplication.translate
-        AccountsWindow.setWindowTitle(_translate("AccountsWindow", "MainWindow"))
-        self.tableWidget.setSortingEnabled(False)
-        item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("AccountsWindow", "E-Mail address"))
-        item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("AccountsWindow", "New Column"))
-        item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("AccountsWindow", "Delete account"))
-        self.pushButton.setText(_translate("AccountsWindow", "Add new"))
-        self.pushButton_save.setText(_translate("AccountsWindow", "Save"))
-        self.menuMenu.setTitle(_translate("AccountsWindow", "Menu"))
-        self.actionClose.setText(_translate("AccountsWindow", "Close"))
+    def MessageBox(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
 
+        msg.setText("Deleting E-Mail account")
+        msg.setInformativeText("Are You sure You want to do this?")
+        msg.setWindowTitle("TMail - Account")
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.buttonClicked.connect(self.confirmed)
+        msg.exec_()
+
+    def confirmed(self,i):
+        if i.text() == 'OK':
+            self.ui.tableWidget.removeRow(self.ui.tableWidget.currentRow())
+
+
+    def createRow(self):
+        lastIndex = self.ui.tableWidget.rowCount()
+        table = self.ui.tableWidget
+        table.insertRow(lastIndex)
+        table.setItem(lastIndex,0,QTableWidgetItem("E-mail address"))
+        table.setItem(lastIndex,1,QTableWidgetItem("E-mail password"))
+        item = QTableWidgetItem("Delete")
+        item.setForeground(QBrush(QColor(85,0,0,255)))
+        item.setFlags(Core.Qt.ItemIsEnabled)
+        table.setItem(lastIndex,2,item)
+
+    def saveAccounts(self):
+        table = self.ui.tableWidget
