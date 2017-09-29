@@ -62,16 +62,20 @@ class TMail_Accounts(QMainWindow):
 
 class TMail(QMainWindow):
 
+    resized = Core.pyqtSignal()
+
     def __init__(self, parent=None):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        #SET WINDOW TO SCREEN CENTER
-        qtRectangle = self.frameGeometry()
+        #INITIAL WIDTH
+        self.initialMainGeometry = self.frameGeometry()
+
+        #SET TO WINDOW CENTER
         centerPoint = QDesktopWidget().availableGeometry().center()
-        qtRectangle.moveCenter(centerPoint)
-        self.move(qtRectangle.topLeft())
+        self.initialMainGeometry.moveCenter(centerPoint)
+        self.move(self.initialMainGeometry.topLeft())
 
         self.accounts = TMail_Accounts()
         self.ui.actionNew_account.triggered.connect(self.onAccounts)
@@ -89,7 +93,6 @@ class TMail(QMainWindow):
         self.addChild(outbox_branch, column, 'Sent')
         self.addChild(outbox_branch, column, 'Drafts')
 
-
     def addParent(self, parent, column, title):
         item = QTreeWidgetItem(parent, [title])
         item.setChildIndicatorPolicy(QTreeWidgetItem.ShowIndicator)
@@ -105,8 +108,9 @@ class TMail(QMainWindow):
         self.accounts.move(qtRectangle.topLeft())
         self.accounts.show()
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     MyApp = TMail()
-    MyApp.show();
+    MyApp.show()
     sys.exit(app.exec_())
