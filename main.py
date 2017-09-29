@@ -34,26 +34,24 @@ class TMail(QMainWindow):
 
     def addItems(self, parent):
         column = 0
-        inbox_branch = self.addParent(parent, column, 'Inbox', 'data Inbox')
-        outbox_branch = self.addParent(parent, column, 'Outbox', 'data Outbox')
+        inbox_branch = self.addParent(parent, column, 'Inbox')
+        outbox_branch = self.addParent(parent, column, 'Outbox')
 
-        self.addChild(inbox_branch, column, 'Main', 'data Type 1')
-        self.addChild(inbox_branch, column, 'Spam', 'data Type 2')
+        self.addChild(inbox_branch, column, 'Main')
+        self.addChild(inbox_branch, column, 'Spam')
 
-        self.addChild(outbox_branch, column, 'Sent', 'data Type 3')
-        self.addChild(outbox_branch, column, 'Drafts', 'data Type 4')
+        self.addChild(outbox_branch, column, 'Sent')
+        self.addChild(outbox_branch, column, 'Drafts')
 
 
-    def addParent(self, parent, column, title, data):
+    def addParent(self, parent, column, title):
         item = QTreeWidgetItem(parent, [title])
-        item.setData(column, Core.Qt.UserRole, data)
         item.setChildIndicatorPolicy(QTreeWidgetItem.ShowIndicator)
         item.setExpanded(True)
         return item
 
-    def addChild(self, parent, column, title, data):
+    def addChild(self, parent, column, title):
         item = QTreeWidgetItem(parent, [title])
-        item.setData(column, Core.Qt.UserRole, data)
         return item
 
     def onAccounts(self):
