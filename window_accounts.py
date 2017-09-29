@@ -64,7 +64,7 @@ class Ui_AccountsWindow(object):
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("AccountsWindow", "E-Mail address"))
         item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("AccountsWindow", "New Column"))
+        item.setText(_translate("AccountsWindow", "Password (click to see)"))
         item = self.tableWidget.horizontalHeaderItem(2)
         item.setText(_translate("AccountsWindow", "Delete account"))
         self.pushButton.setText(_translate("AccountsWindow", "Add new"))

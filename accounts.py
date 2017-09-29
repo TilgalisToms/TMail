@@ -3,6 +3,7 @@ from PyQt5.QtGui import QBrush, QColor
 from window_accounts import Ui_AccountsWindow
 
 import PyQt5.QtCore as Core
+import database as DB
 
 class TMail_Accounts(QMainWindow):
 
@@ -20,11 +21,26 @@ class TMail_Accounts(QMainWindow):
         addAccount.clicked.connect(self.createRow)
         table.cellClicked.connect(self.selectColumn)
         self.ui.pushButton_save.clicked.connect(self.saveAccounts)
+        self.db = DB.Database()
+        self.loadAccounts()
 
     def selectColumn(self):
         currentColumn = self.ui.tableWidget.currentColumn()
         if currentColumn == 2:
             self.MessageBox()
+
+    def loadAccounts(self):
+        mailboxes = self.db.getMailboxes(True)
+        for mailbox in mailboxes:
+            lastIndex = self.ui.tableWidget.rowCount()
+            table = self.ui.tableWidget
+            table.insertRow(lastIndex)
+            table.setItem(lastIndex, 0, QTableWidgetItem(mailbox[1]))
+            table.setItem(lastIndex, 1, QTableWidgetItem('********'))
+            item = QTableWidgetItem("Delete")
+            item.setForeground(QBrush(QColor(85, 0, 0, 255)))
+            item.setFlags(Core.Qt.ItemIsEnabled)
+            table.setItem(lastIndex, 2, item)
 
     def MessageBox(self):
         msg = QMessageBox()

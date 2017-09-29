@@ -48,6 +48,7 @@ class TMail(QMainWindow):
 
     def addChild(self, parent, column, title):
         item = QTreeWidgetItem(parent, [title])
+        item.setExpanded(True)
         return item
 
     def onAccounts(self):
