@@ -28,9 +28,9 @@ class TMail(QMainWindow):
 
     def addItems(self, parent):
         column = 0
-        mailboxes = self.db.getMailboxes()
+        mailboxes = self.accounts.getMailboxes()
         for mailbox in mailboxes:
-            rootParent = self.addParent(parent, column, mailbox[0])
+            rootParent = self.addParent(parent, column, mailbox[1])
             inbox_branch = self.addChild(rootParent, column, 'Inbox')
             outbox_branch = self.addChild(rootParent, column, 'Outbox')
 
