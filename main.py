@@ -1,5 +1,6 @@
 import sys
 import accounts as AccountWindow
+import database as DB
 
 from PyQt5.QtWidgets import QApplication,QMainWindow,QTreeWidgetItem,QDesktopWidget,qApp
 from window_main import Ui_MainWindow
@@ -8,9 +9,10 @@ class TMail(QMainWindow):
 
     def __init__(self, parent=None):
         super().__init__()
+
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
+        self.db = DB.Database()
         #INITIAL WIDTH
         self.initialMainGeometry = self.frameGeometry()
 
@@ -26,14 +28,17 @@ class TMail(QMainWindow):
 
     def addItems(self, parent):
         column = 0
-        inbox_branch = self.addParent(parent, column, 'Inbox')
-        outbox_branch = self.addParent(parent, column, 'Outbox')
+        mailboxes = self.db.getMailboxes()
+        for mailbox in mailboxes:
+            rootParent = self.addParent(parent, column, mailbox[0])
+            inbox_branch = self.addChild(rootParent, column, 'Inbox')
+            outbox_branch = self.addChild(rootParent, column, 'Outbox')
 
-        self.addChild(inbox_branch, column, 'Main')
-        self.addChild(inbox_branch, column, 'Spam')
+            self.addChild(inbox_branch, column, 'Main')
+            self.addChild(inbox_branch, column, 'Spam')
 
-        self.addChild(outbox_branch, column, 'Sent')
-        self.addChild(outbox_branch, column, 'Drafts')
+            self.addChild(outbox_branch, column, 'Sent')
+            self.addChild(outbox_branch, column, 'Drafts')
 
     def addParent(self, parent, column, title):
         item = QTreeWidgetItem(parent, [title])

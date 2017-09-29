@@ -18,10 +18,10 @@ class TMail_Accounts(QMainWindow):
         table.setColumnWidth(2,70)
         addAccount = self.ui.pushButton
         addAccount.clicked.connect(self.createRow)
-        table.cellClicked.connect(self.foo)
+        table.cellClicked.connect(self.selectColumn)
         self.ui.pushButton_save.clicked.connect(self.saveAccounts)
 
-    def foo(self):
+    def selectColumn(self):
         currentColumn = self.ui.tableWidget.currentColumn()
         if currentColumn == 2:
             self.MessageBox()
