@@ -30,7 +30,7 @@ class TMail(QMainWindow):
         column = 0
         mailboxes = self.accounts.getMailboxes()
         for mailbox in mailboxes:
-            rootParent = self.addParent(parent, column, mailbox[1])
+            rootParent = self.addParent(parent, column, mailbox[0])
             inbox_branch = self.addChild(rootParent, column, 'Inbox')
             outbox_branch = self.addChild(rootParent, column, 'Outbox')
 

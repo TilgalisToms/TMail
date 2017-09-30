@@ -59,3 +59,13 @@ class Database:
         for item in self.configArray:
             if item[0] == sid:
                 item[1] = value
+
+    def removeMailbox(self,id):
+        self.connect()
+        c = self.db.cursor()
+        c.execute('DELETE FROM `mailbox` WHERE `id`=?',(id,))
+        self.db.commit()
+        self.db.close()
+
+    def saveAccounts(self,accounts):
+        print(accounts)

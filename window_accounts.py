@@ -1,4 +1,12 @@
-from PyQt5 import QtCore, QtWidgets
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'accountswindow.ui'
+#
+# Created by: PyQt5 UI code generator 5.9
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_AccountsWindow(object):
     def setupUi(self, AccountsWindow):
@@ -21,24 +29,18 @@ class Ui_AccountsWindow(object):
         self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContentsOnFirstShow)
         self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
         self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setColumnCount(1)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         item.setTextAlignment(QtCore.Qt.AlignCenter)
         self.tableWidget.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignCenter)
-        self.tableWidget.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignCenter)
-        self.tableWidget.setHorizontalHeaderItem(2, item)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(443, 10, 91, 21))
+        self.pushButton.setGeometry(QtCore.QRect(443, 8, 91, 21))
         self.pushButton.setObjectName("pushButton")
-        self.pushButton_save = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_save.setGeometry(QtCore.QRect(350, 10, 91, 21))
-        self.pushButton_save.setObjectName("pushButton_save")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(10, 10, 221, 16))
+        self.label.setObjectName("label")
         AccountsWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(AccountsWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 540, 22))
@@ -63,12 +65,8 @@ class Ui_AccountsWindow(object):
         self.tableWidget.setSortingEnabled(False)
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("AccountsWindow", "E-Mail address"))
-        item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("AccountsWindow", "Password (click to see)"))
-        item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("AccountsWindow", "Delete account"))
         self.pushButton.setText(_translate("AccountsWindow", "Add new"))
-        self.pushButton_save.setText(_translate("AccountsWindow", "Save"))
+        self.label.setText(_translate("AccountsWindow", "Clicking on row will open editor"))
         self.menuMenu.setTitle(_translate("AccountsWindow", "Menu"))
         self.actionClose.setText(_translate("AccountsWindow", "Close"))
 
