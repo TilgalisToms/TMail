@@ -1,6 +1,5 @@
 import sys
 import accounts as AccountWindow
-import database as DB
 
 from PyQt5.QtWidgets import QApplication,QMainWindow,QTreeWidgetItem,QDesktopWidget,qApp
 from window_main import Ui_MainWindow
@@ -12,7 +11,6 @@ class TMail(QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.db = DB.Database()
         #INITIAL WIDTH
         self.initialMainGeometry = self.frameGeometry()
 
@@ -21,7 +19,7 @@ class TMail(QMainWindow):
         self.initialMainGeometry.moveCenter(centerPoint)
         self.move(self.initialMainGeometry.topLeft())
 
-        self.accounts = AccountWindow.TMail_Accounts()
+        self.accounts = AccountWindow.TMail_Accounts(self)
         self.ui.actionNew_account.triggered.connect(self.onAccounts)
         self.ui.actionExit.triggered.connect(qApp.exit)
         self.addItems(self.ui.treeWidget.invisibleRootItem())
@@ -29,8 +27,8 @@ class TMail(QMainWindow):
     def addItems(self, parent):
         column = 0
         mailboxes = self.accounts.getMailboxes()
-        for mailbox in mailboxes:
-            rootParent = self.addParent(parent, column, mailbox[0])
+        for index,mailbox in mailboxes.items():
+            rootParent = self.addParent(parent, column, mailbox['address'])
             inbox_branch = self.addChild(rootParent, column, 'Inbox')
             outbox_branch = self.addChild(rootParent, column, 'Outbox')
 
@@ -55,6 +53,10 @@ class TMail(QMainWindow):
         qtRectangle = self.frameGeometry()
         self.accounts.move(qtRectangle.topLeft())
         self.accounts.show()
+
+    def refresh(self):
+        self.ui.treeWidget.clear()
+        self.addItems(self.ui.treeWidget.invisibleRootItem())
 
 
 if __name__ == '__main__':

@@ -1,18 +1,20 @@
 from PyQt5.QtWidgets import QTableWidgetItem,QMainWindow
+from PyQt5.Qt import Qt
 from window_accounts import Ui_AccountsWindow
 import database as DB
 from edit_account import TMail_EditAccount as EditAccountWindow
 
 class TMail_Accounts(QMainWindow):
 
-    accountArray = []
+    accountArray = {}
 
     def __init__(self, parent=None):
         super().__init__()
+        self.parent = parent
         self.ui = Ui_AccountsWindow()
         self.ui.setupUi(self)
         self.ui.actionClose.triggered.connect(self.close)
-        self.editAccount = EditAccountWindow()
+        self.editAccount = EditAccountWindow(self)
         table = self.ui.tableWidget
         table.setColumnWidth(0,530)
         addAccount = self.ui.pushButton
@@ -24,23 +26,37 @@ class TMail_Accounts(QMainWindow):
     def selectColumn(self):
         qtRectangle = self.frameGeometry()
         self.editAccount.move(qtRectangle.topLeft())
-        self.editAccount.show()
+        self.editAccount.activeAccount = self.ui.tableWidget.currentItem().data(Qt.UserRole)
+        exists = self.editAccount.getAccount()
+        if exists != False:
+            self.editAccount.show()
 
     def loadAccounts(self):
         mailboxes = self.getMailboxes()
-        for mailbox in mailboxes:
+        print(mailboxes)
+        for index,mailbox in mailboxes.items():
             lastIndex = self.ui.tableWidget.rowCount()
             table = self.ui.tableWidget
             table.insertRow(lastIndex)
-            table.setItem(lastIndex, 0, QTableWidgetItem(mailbox[0]))
+            item = QTableWidgetItem(mailbox['address'])
+            item.setData(Qt.UserRole,mailbox['id'])
+            table.setItem(lastIndex, 0, item)
 
     def createRow(self):
         lastIndex = self.ui.tableWidget.rowCount()
         table = self.ui.tableWidget
         table.insertRow(lastIndex)
-        table.setItem(lastIndex,0,QTableWidgetItem("E-mail address"))
+        item = QTableWidgetItem("E-mail address")
+        item.setData(Qt.UserRole,None)#This means we create new account
+        table.setItem(lastIndex,0,item)
 
     def getMailboxes(self):
-        if self.accountArray.__len__() == 0:
+        if len(self.accountArray) == 0:
             self.accountArray = self.db.getMailboxes()
         return self.accountArray
+
+    def refresh(self):
+        self.ui.tableWidget.clear()
+        self.ui.tableWidget.setRowCount(0)
+        self.loadAccounts()
+        self.parent.refresh()
