@@ -33,7 +33,6 @@ class TMail_Accounts(QMainWindow):
 
     def loadAccounts(self):
         mailboxes = self.getMailboxes()
-        print(mailboxes)
         for index,mailbox in mailboxes.items():
             lastIndex = self.ui.tableWidget.rowCount()
             table = self.ui.tableWidget

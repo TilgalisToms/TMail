@@ -15,7 +15,8 @@ class Database:
     def checkAndCreateTables(self):
         self.connect()
         c = self.db.cursor()
-        c.execute('CREATE TABLE IF NOT EXISTS `mailbox` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `address` varchar(255), `password` varchar(255),`smtp` varchar(255),`imap` varchar(255),`title` varchar(255))')
+        # c.execute('DROP TABLE `mailbox`')
+        c.execute('CREATE TABLE IF NOT EXISTS `mailbox` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `address` varchar(255), `password` varchar(255),`imap` varchar(255),`smtp` varchar(255),`title` varchar(255))')
         c.execute('CREATE TABLE IF NOT EXISTS `config` (`sid` varchar(32) PRIMARY KEY, `value` varchar(255))')
         self.db.commit()
         self.db.close()
@@ -23,14 +24,20 @@ class Database:
     def getMailboxes(self):
         self.connect()
         c = self.db.cursor()
-        c.execute('SELECT `id`,`address` FROM `mailbox` ORDER BY `id` ASC')
+        c.execute('SELECT * FROM `mailbox` ORDER BY `id` ASC')
         results = c.fetchall()
 
         array = {}
         for result in results:
-            array[result[0]] = {}
-            array[result[0]]['address'] = result[1]
-            array[result[0]]['id']      = result[0]
+            row = {
+                'id': result[0],
+                'address': result[1],
+                'password': result[2],
+                'imap': result[3],
+                'smtp': result[4],
+                'title': result[5]
+            }
+            array[result[0]] = row
 
         self.db.close()
         return array
