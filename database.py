@@ -7,7 +7,7 @@ class Database:
     def __init__(self):
         self.connect()
         self.checkAndCreateTables()
-        self.getConfig()
+        # self.getConfig()
 
     def connect(self):
         self.db = sqlite3.connect('accounts.db')
@@ -16,8 +16,9 @@ class Database:
         self.connect()
         c = self.db.cursor()
         # c.execute('DROP TABLE `mailbox`')
-        c.execute('CREATE TABLE IF NOT EXISTS `mailbox` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `address` varchar(255), `password` varchar(255),`imap` varchar(255),`smtp` varchar(255),`title` varchar(255))')
-        c.execute('CREATE TABLE IF NOT EXISTS `config` (`sid` varchar(32) PRIMARY KEY, `value` varchar(255))')
+        c.execute('CREATE TABLE IF NOT EXISTS `mailbox` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `address` VARCHAR(255), `password` VARCHAR(255),`title` VARCHAR(255))')
+        c.execute('CREATE TABLE IF NOT EXISTS `config` (`sid` varchar(32) PRIMARY KEY, `value` VARCHAR(255))')
+        c.execute('CREATE TABLE IF NOT EXISTS `message` (`id` INTEGER PRIMARY KEY, `folder` VARCHAR(32), `html` TEXT, `sender` VARCHAR(255), `title` TEXT, `received` DATETIME, `read` INTEGER(1))')
         self.db.commit()
         self.db.close()
 
@@ -94,8 +95,8 @@ class Database:
     def createAccount(self,data):
         self.connect()
         c = self.db.cursor()
-        c.execute('INSERT INTO `mailbox` (`address`,`password`,`imap`,`smtp`,`title`) VALUES (?,?,?,?,?)', (
-            data['email'], data['password'], data['imap'], data['smtp'], data['title'],
+        c.execute('INSERT INTO `mailbox` (`address`,`password`,`title`) VALUES (?,?,?)', (
+            data['email'], data['password'], data['title'],
         ))
         self.db.commit()
         self.db.close()
@@ -103,8 +104,26 @@ class Database:
     def saveAccount(self,id,data):
         self.connect()
         c = self.db.cursor()
-        c.execute('UPDATE `mailbox` SET `address`=?, `password`=?, `imap`=?, `smtp`=?, `title`=? WHERE `id`=?',(
-            data['email'],data['password'],data['imap'],data['smtp'],data['title'],id,
+        c.execute('UPDATE `mailbox` SET `address`=?, `password`=?, `title`=? WHERE `id`=?',(
+            data['email'],data['password'],data['title'],id,
         ))
         self.db.commit()
         self.db.close()
+
+    def getMessages(self,folder):
+        self.connect()
+        c = self.db.cursor()
+        c.execute('SELECT * FROM `message` WHERE `folder`=?',(folder, ))
+        array = {}
+        results = c.fetchall()
+        for result in results:
+            item = {}
+            item['id'] = result[0]
+            item['html'] = result[2]
+            item['sender'] = result[3]
+            item['title'] = result[4]
+            item['received'] = result[5]
+            item['read'] = result[6] == 1
+            array[result[0]] = item
+        self.db.close()
+        return array

@@ -22,14 +22,9 @@ class TMail_EditAccount(QMainWindow):
             return False
         if self.activeAccount != None:
             self.activeAccount = self.db.getMailbox(self.activeAccount)
-            # 0-ID,1-Address,2-Password,3-IMAP,4-SMTP,5-Title
             self.ui.lineEdit_email.setText(self.activeAccount['address'])
             if self.activeAccount['password'] != None:
                 self.ui.lineEdit_pass.setText(self.activeAccount['password'])
-            if self.activeAccount['imap'] != None:
-                self.ui.lineEdit_imap.setText(self.activeAccount['imap'])
-            if self.activeAccount['smtp'] != None:
-                self.ui.lineEdit_smtp.setText(self.activeAccount['smtp'])
             if self.activeAccount['title'] != None:
                 self.ui.lineEdit_name.setText(self.activeAccount['title'])
 
@@ -38,26 +33,11 @@ class TMail_EditAccount(QMainWindow):
         self.saveData = {}
         self.saveData['password'] = self.ui.lineEdit_pass.text()
         self.saveData['title']    = self.ui.lineEdit_name.text()
-        #@todo move validation and data fill in one method
         if re.match(r"[^@]+@[^@]+\.[^@]+",self.ui.lineEdit_email.text()):
             self.saveData['email'] = self.ui.lineEdit_email.text()
         else:
             self.ui.label.setText(self.ui.label.text() + ' is INVALID!')
             self.ui.label.setStyleSheet('color: red')
-            errors += 1
-
-        if self.validateUrl(self.ui.lineEdit_imap.text()):
-            self.saveData['imap'] = self.ui.lineEdit_imap.text()
-        else:
-            self.ui.label_3.setText(self.ui.label_3.text() + ' is INVALID')
-            self.ui.label_3.setStyleSheet('color: red')
-            errors += 1
-
-        if self.validateUrl(self.ui.lineEdit_smtp.text()):
-            self.saveData['smtp'] = self.ui.lineEdit_smtp.text()
-        else:
-            self.ui.label_4.setText(self.ui.label_4.text() +  ' is INVALID')
-            self.ui.label_4.setStyleSheet('color: red')
             errors += 1
 
         if errors == 0:
